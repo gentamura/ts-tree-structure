@@ -68,9 +68,7 @@ export class Node<T> {
       throw new Error('Invalid index.');
     }
 
-    if (self.model.children) {
-      self.model.children.splice(insertIndex, 0, child.model);
-    }
+    self.model.children.splice(insertIndex, 0, child.model);
     self.children.splice(insertIndex, 0, child);
 
     return child;
@@ -105,6 +103,45 @@ export class Node<T> {
 
     return first;
   }
+
+  isRoot() {
+    return this.parent === undefined;
+  }
+
+  setIndex(index: number) {
+    if (this.parent === undefined) {
+      if (index === 0) {
+        return this;
+      }
+      throw new Error('Invalid index.');
+    }
+
+    if (index < 0 || index >= this.parent.children.length) {
+      throw new Error('Invalid index.');
+    }
+
+    const currentIndex = this.parent.children.indexOf(this);
+
+    // Get target node in children by current index.
+    const node = this.parent.children.splice(currentIndex, 1)[0];
+    // Insert the node in children by new index.
+    this.parent.children.splice(index, 0, node);
+
+    // Get target model in children by current index.
+    const model = this.parent.model.children!.splice(currentIndex, 1)[0];
+    // Insert the model in children by new index.
+    this.parent.model.children!.splice(index, 0, model);
+
+    return this;
+  }
+
+  getIndex() {
+    if (this.parent === undefined) {
+      return 0;
+    }
+
+    return this.parent.children.indexOf(this);
+  };
 }
 
 class WalkStrategy {
