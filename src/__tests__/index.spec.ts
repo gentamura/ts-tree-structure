@@ -134,7 +134,7 @@ describe('TreeData', () => {
         expect(root.model.children).toEqual([{ id: 11 }, { id: 12 }, { id: 13 }]);
       });
 
-      it('should add child at index 0 of a leaf', function () {
+      it('should add child at index 0 of a leaf', () => {
         const leaf = root.first(idEq(11))!;
         leaf.addChildAtIndex(treeData.parse({ id: 111 }), 0);
         expect(leaf.model.children).toEqual([{ id: 111 }]);
@@ -158,7 +158,7 @@ describe('TreeData', () => {
         root = treeData.parse({ id: 1, children: [{ id: 11 }, { id: 12 }, { id: 13 }] });
       });
 
-      it('should set the index of the node among its siblings', function () {
+      it('should set the index of the node among its siblings', () => {
         const child = root.children[0];
 
         for (let i = 0; i < root.children.length; i++) {
@@ -168,7 +168,7 @@ describe('TreeData', () => {
         }
       });
 
-      it('keeps the order of all other nodes', function () {
+      it('keeps the order of all other nodes', () => {
         let oldOrder, i, j, k, l;
         const child = root.children[0];
 
@@ -192,24 +192,24 @@ describe('TreeData', () => {
         }
       });
 
-      it('should return itself', function () {
+      it('should return itself', () => {
         const child = root.children[0];
         expect(child.setIndex(1)).toEqual(child);
       });
 
-      it('should throw an error when node is a root and the index is not zero', function () {
+      it('should throw an error when node is a root and the index is not zero', () => {
         expect(() => root.setIndex(1)).toThrow(new Error('Invalid index.'));
       });
 
-      it('should allow to set the root node index to zero', function () {
+      it('should allow to set the root node index to zero', () => {
         expect(root.setIndex(0)).toEqual(root);
       });
 
-      it('should throw an error when setting to a negative index', function () {
+      it('should throw an error when setting to a negative index', () => {
         expect(() => root.children[0].setIndex(-1)).toThrow(new Error('Invalid index.'));
       });
 
-      it('should throw an error when setting to a too high index', function () {
+      it('should throw an error when setting to a too high index', () => {
         expect(() => root.children[0].setIndex(root.children.length)).toThrow(new Error('Invalid index.'));
       });
     });
