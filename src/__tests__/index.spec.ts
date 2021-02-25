@@ -248,5 +248,86 @@ describe('TreeData', () => {
         expect(pathToNode121[2].model.id).toEqual(121);
       });
     });
+
+    describe('traversal', function () {
+      let root: Node<NodeType>, mock121: Function, mock12: Function;
+
+      const callback121 = (node: Node<NodeType>) => {
+        if (node.model.id === 121) {
+          return false;
+        }
+      };
+
+      const callback12 = (node: Node<NodeType>) => {
+        if (node.model.id === 12) {
+          return false;
+        }
+      };
+
+      beforeEach(() => {
+        root = treeData.parse({
+          id: 1,
+          children: [
+            {
+              id: 11,
+              children: [{ id: 111 }]
+            },
+            {
+              id: 12,
+              children: [{ id: 121 }, { id: 122 }]
+            }
+          ]
+        });
+
+        mock121 = jest.fn(callback121);
+        mock12 = jest.fn(callback12);
+      });
+
+      describe('walk depthFirstPreOrder by default', () => {
+        it('should traverse the nodes until the callback returns false', () => {
+          root.walk(mock121);
+          expect(mock121).toHaveBeenCalledTimes(5);
+          expect(mock121).toHaveBeenNthCalledWith(1, root.first(idEq(1)));
+          expect(mock121).toHaveBeenNthCalledWith(2, root.first(idEq(11)));
+          expect(mock121).toHaveBeenNthCalledWith(3, root.first(idEq(111)));
+          expect(mock121).toHaveBeenNthCalledWith(4, root.first(idEq(12)));
+          expect(mock121).toHaveBeenNthCalledWith(5, root.first(idEq(121)));
+        });
+      });
+
+      describe('walk depthFirstPostOrder', () => {
+        it('should traverse the nodes until the callback returns false', () => {
+          root.walk(mock121, { strategy: 'post' });
+          expect(mock121).toHaveBeenCalledTimes(3);
+          expect(mock121).toHaveBeenNthCalledWith(1, root.first(idEq(111)));
+          expect(mock121).toHaveBeenNthCalledWith(2, root.first(idEq(11)));
+          expect(mock121).toHaveBeenNthCalledWith(3, root.first(idEq(121)));
+        });
+      });
+
+      describe('walk depthFirstPostOrder (2)', function () {
+        it('should traverse the nodes until the callback returns false', function () {
+          root.walk(mock12, { strategy: 'post' });
+          expect(mock12).toHaveBeenCalledTimes(5);
+          expect(mock12).toHaveBeenNthCalledWith(1, root.first(idEq(111)));
+          expect(mock12).toHaveBeenNthCalledWith(2, root.first(idEq(11)));
+          expect(mock12).toHaveBeenNthCalledWith(3, root.first(idEq(121)));
+          expect(mock12).toHaveBeenNthCalledWith(4, root.first(idEq(122)));
+          expect(mock12).toHaveBeenNthCalledWith(5, root.first(idEq(12)));
+        });
+      });
+
+      describe('walk breadthFirst', () => {
+        it('should traverse the nodes until the callback returns false', () => {
+          root.walk(mock121, { strategy: 'breadth' });
+          expect(mock121).toHaveBeenCalledTimes(5);
+          expect(mock121).toHaveBeenNthCalledWith(1, root.first(idEq(1)));
+          expect(mock121).toHaveBeenNthCalledWith(2, root.first(idEq(11)));
+          expect(mock121).toHaveBeenNthCalledWith(3, root.first(idEq(12)));
+          expect(mock121).toHaveBeenNthCalledWith(4, root.first(idEq(111)));
+          expect(mock121).toHaveBeenNthCalledWith(5, root.first(idEq(121)));
+        });
+      });
+    });
   });
 });

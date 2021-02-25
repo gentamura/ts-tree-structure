@@ -44,7 +44,7 @@ export class Node<T> {
   model: Model<T>;
   children: Node<T>[];
   parent?: Node<T>;
-  walkStrategy: WalkStrategy;
+  walkStrategy: WalkStrategy<T>;
 
   constructor(config: any, model: Model<T>) {
     this.config = config;
@@ -156,21 +156,74 @@ export class Node<T> {
   getPath() {
     return this._addToPath([], this);
   }
+
+  walk(fn: Function, options: Options = { strategy: 'pre' }) {
+    switch (options.strategy) {
+      case 'pre':
+        this.walkStrategy.pre(this, fn);
+        break;
+      case 'post':
+        this.walkStrategy.post(this, fn);
+        break;
+      case 'breadth':
+        this.walkStrategy.breadth(this, fn);
+        break;
+    }
+  }
 }
 
-class WalkStrategy {
-  pre<T>(node: Node<T>, callback: any) {
+class WalkStrategy<T> {
+  pre(node: Node<T>, callback: Function) {
+    const len = node.children.length;
     let keepGoing = callback(node);
-    let len = node.children.length;
 
     for (let i = 0; i < len; i++) {
       if (keepGoing === false) {
         return false;
       }
+
       keepGoing = this.pre(node.children[i], callback);
     }
 
     return keepGoing;
+  }
+
+  post(node: Node<T>, callback: Function) {
+    const len = node.children.length;
+    let keepGoing;
+
+    for (let i = 0; i < len; i++) {
+      keepGoing = this.post(node.children[i], callback);
+
+      if (keepGoing === false) {
+        return false;
+      }
+    }
+
+    keepGoing = callback(node);
+
+    return keepGoing;
+  }
+
+  breadth(node: Node<T>, callback: Function) {
+    const queue = [node];
+
+    (function processQueue() {
+      if (queue.length === 0) {
+        return;
+      }
+
+      const node = queue.shift()!;
+      const len = node.children.length;
+
+      for (let i = 0; i < len; i++) {
+        queue.push(node.children[i]);
+      }
+
+      if (callback(node) !== false) {
+        processQueue();
+      }
+    })();
   }
 }
 
