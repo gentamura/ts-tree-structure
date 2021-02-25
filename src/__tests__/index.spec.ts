@@ -213,5 +213,40 @@ describe('TreeData', () => {
         expect(() => root.children[0].setIndex(root.children.length)).toThrow(new Error('Invalid index.'));
       });
     });
+
+    describe('getPath()', () => {
+      let root: Node<NodeType>;
+
+      beforeEach(() => {
+        root = treeData.parse({
+          id: 1,
+          children: [
+            {
+              id: 11,
+              children: [{ id: 111 }]
+            },
+            {
+              id: 12,
+              children: [{ id: 121 }, { id: 122 }]
+            }
+          ]
+        });
+      });
+
+      it('should get an array with the root node if called on the root node', () => {
+        const pathToRoot = root.getPath();
+        expect(pathToRoot.length).toEqual(1);
+        expect(pathToRoot[0].model.id).toEqual(1);
+      });
+
+      it('should get an array of nodes from the root to the node (included)', () => {
+        const pathToNode121 = root.first(idEq(121))!.getPath();
+
+        expect(pathToNode121.length).toEqual(3);
+        expect(pathToNode121[0].model.id).toEqual(1);
+        expect(pathToNode121[1].model.id).toEqual(12);
+        expect(pathToNode121[2].model.id).toEqual(121);
+      });
+    });
   });
 });

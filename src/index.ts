@@ -142,6 +142,20 @@ export class Node<T> {
 
     return this.parent.children.indexOf(this);
   };
+
+  private _addToPath(path: Node<T>[], node: Node<T>) {
+    path.unshift(node);
+
+    if (!node.isRoot()) {
+      this._addToPath(path, node.parent!);
+    }
+
+    return path;
+  }
+
+  getPath() {
+    return this._addToPath([], this);
+  }
 }
 
 class WalkStrategy {
