@@ -104,6 +104,27 @@ export class Node<T> {
     return first;
   }
 
+  all(fn?: NodeVisitorFunction<T>) {
+    const all: Node<T>[] = [];
+
+    const args = {
+      fn: fn ?? (bool => () => bool)(true),
+      options: {
+        strategy: 'pre',
+      },
+    };
+
+    if (args.options.strategy === 'pre') {
+      this.walkStrategy.pre(this, (node: Node<T>) => {
+        if (args.fn(node)) {
+          all.push(node);
+        }
+      });
+    }
+
+    return all;
+  };
+
   isRoot() {
     return this.parent === undefined;
   }

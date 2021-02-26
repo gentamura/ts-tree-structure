@@ -329,5 +329,61 @@ describe('TreeData', () => {
         });
       });
     });
+
+    describe('all()', () => {
+      let root: Node<NodeType>;
+
+      beforeEach(() => {
+        root = treeData.parse({
+          id: 1,
+          children: [
+            {
+              id: 11,
+              children: [{ id: 111 }]
+            },
+            {
+              id: 12,
+              children: [{ id: 121 }, { id: 122 }]
+            }
+          ]
+        });
+      });
+
+      it('should get an empty array if no nodes match the predicate', () => {
+        const idLt0 = root.all(node => node.model.id < 0);
+
+        expect(idLt0.length).toEqual(0);
+      });
+
+      it('should get all nodes if no predicate is given', () => {
+        const allNodes = root.all();
+
+        expect(allNodes.length).toEqual(6);
+      });
+
+      it('should get an array with the node itself if only the node matches the predicate', () => {
+        const idEq1 = root.all(idEq(1));
+
+        expect(idEq1.length).toEqual(1);
+        expect(idEq1[0]).toEqual(root);
+      });
+
+      it('should get an array with all nodes that match a given predicate', () => {
+        const idGt100 = root.all(node => node.model.id > 100);
+
+        expect(idGt100.length).toEqual(3);
+        expect(idGt100[0].model.id).toEqual(111);
+        expect(idGt100[1].model.id).toEqual(121);
+        expect(idGt100[2].model.id).toEqual(122);
+      });
+
+      it('should get an array with all nodes that match a given predicate (2)', () => {
+        const idGt10AndChildOfRoot = root.all(node => node.model.id > 10 && node.parent === root);
+
+        expect(idGt10AndChildOfRoot.length).toEqual(2);
+        expect(idGt10AndChildOfRoot[0].model.id).toEqual(11);
+        expect(idGt10AndChildOfRoot[1].model.id).toEqual(12);
+      });
+    });
   });
 });
