@@ -14,6 +14,11 @@ interface Options {
   strategy: StrategyName;
 }
 
+type ParseArgs<T> = (NodeVisitorFunction<T> | Options | undefined)[];
+interface Args<T> {
+  fn: NodeVisitorFunction<T>;
+  options: Options;
+}
 class TreeData {
   private config?: Config;
 
@@ -82,19 +87,45 @@ export class Node<T> {
     return this._addChild(this, child, index);
   }
 
-  first(fn: NodeVisitorFunction<T>): Node<T> | undefined {
+  private _parseArgs<T>(...args: ParseArgs<T>): Args<T> {
+    let parsedArgs: Args<T>;
+
+    if (typeof args[0] === 'function') {
+      parsedArgs = {
+        fn: args[0],
+        options: (typeof args[1] === 'object')
+          ? args[1]
+          : { strategy: 'pre' },
+      };
+    } else {
+      parsedArgs = {
+        fn: (typeof args[1] === 'function')
+          ? args[1]
+          : (() => true),
+        options: args[0] ?? { strategy: 'pre' },
+      };
+    }
+
+    return parsedArgs;
+  }
+
+  first(fn?: NodeVisitorFunction<T>, options?: Options): Node<T> | undefined;
+  first(options?: Options): Node<T> | undefined;
+  first(...argList: ParseArgs<T>): Node<T> | undefined {
     let first;
 
-    const args = {
-      fn,
-      options: {
-        strategy: 'pre',
-      },
-    };
+    const { fn, options } = this._parseArgs(...argList);
 
-    if (args.options.strategy === 'pre') {
+    if (options.strategy === 'pre') {
       this.walkStrategy.pre(this, (node: Node<T>) => {
-        if (args.fn(node)) {
+        if (fn(node)) {
+          first = node;
+          return false;
+        }
+      });
+    } else if (options.strategy === 'post') {
+      this.walkStrategy.post(this, (node: Node<T>) => {
+        if (fn(node)) {
           first = node;
           return false;
         }

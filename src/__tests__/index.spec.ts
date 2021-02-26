@@ -249,7 +249,7 @@ describe('TreeData', () => {
       });
     });
 
-    describe('traversal', function () {
+    describe('traversal', () => {
       let root: Node<NodeType>, mock121: Function, mock12: Function;
 
       const callback121 = (node: Node<NodeType>) => {
@@ -305,8 +305,8 @@ describe('TreeData', () => {
         });
       });
 
-      describe('walk depthFirstPostOrder (2)', function () {
-        it('should traverse the nodes until the callback returns false', function () {
+      describe('walk depthFirstPostOrder (2)', () => {
+        it('should traverse the nodes until the callback returns false', () => {
           root.walk(mock12, { strategy: 'post' });
           expect(mock12).toHaveBeenCalledTimes(5);
           expect(mock12).toHaveBeenNthCalledWith(1, root.first(idEq(111)));
@@ -383,6 +383,50 @@ describe('TreeData', () => {
         expect(idGt10AndChildOfRoot.length).toEqual(2);
         expect(idGt10AndChildOfRoot[0].model.id).toEqual(11);
         expect(idGt10AndChildOfRoot[1].model.id).toEqual(12);
+      });
+    });
+
+    describe('first()', () => {
+      let root: Node<NodeType>;
+
+      beforeEach(() => {
+        root = treeData.parse({
+          id: 1,
+          children: [
+            {
+              id: 11,
+              children: [{ id: 111 }]
+            },
+            {
+              id: 12,
+              children: [{id: 121}, {id: 122}]
+            }
+          ]
+        });
+      });
+
+      it('should get the first node when the predicate returns true', () => {
+        const first = root.first(() => true);
+
+        expect(first?.model.id).toEqual(1);
+      });
+
+      it('should get the first node when no predicate is given', () => {
+        const first = root.first();
+
+        expect(first?.model.id).toEqual(1);
+      });
+
+      it('should get the first node with a different strategy when the predicate returns true', () => {
+        const first = root.first(() => true, { strategy: 'post' });
+
+        expect(first?.model.id).toEqual(111);
+      });
+
+      it('should get the first node with a different strategy when no predicate is given', () => {
+        const first = root.first({ strategy: 'post' });
+
+        expect(first?.model.id).toEqual(111);
       });
     });
   });
