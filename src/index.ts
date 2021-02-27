@@ -154,7 +154,19 @@ export class Node<T> {
     }
 
     return all;
-  };
+  }
+
+  drop() {
+    if (!this.isRoot() && this.parent) {
+      const indexOfChild = this.parent.children.indexOf(this);
+      this.parent.children.splice(indexOfChild, 1); // Remove Node from data
+      this.parent.model.children?.splice(indexOfChild, 1); // remove Model from data
+      this.parent = undefined; // Delete object references
+      delete this.parent; // Delete object references
+    }
+
+    return this;
+  }
 
   isRoot() {
     return this.parent === undefined;

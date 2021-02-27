@@ -429,5 +429,35 @@ describe('TreeData', () => {
         expect(first?.model.id).toEqual(111);
       });
     });
+
+    describe('drop()', function () {
+      let root: Node<NodeType>;
+
+      beforeEach(function () {
+        root = treeData.parse({
+          id: 1,
+          children: [
+            {
+              id: 11,
+              children: [{ id: 111 }]
+            },
+            {
+              id: 12,
+              children: [{ id: 121 }, { id: 122 }]
+            }
+          ]
+        });
+      });
+
+      it('should give back the dropped node, even if it is the root', () => {
+        expect(root.drop()).toEqual(root);
+      });
+
+      it('should give back the dropped node, which no longer be found in the original root', () => {
+        expect(root.first(idEq(11))?.drop().model).toEqual({ id: 11, children: [{ id: 111 }]});
+        expect(root.first(idEq(11))).toBeUndefined();
+        expect(root.first(idEq(111))).toBeUndefined();
+      });
+    });
   });
 });
