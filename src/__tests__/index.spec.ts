@@ -452,6 +452,12 @@ describe('TreeData', () => {
 
         expect(first?.model.id).toEqual(111);
       });
+
+      it('should get the first node with a different strategy when no predicate is given (2)', () => {
+        const first = root.first({ strategy: 'breadth' });
+
+        expect(first?.model.id).toEqual(1);
+      });
     });
 
     describe('drop()', function () {

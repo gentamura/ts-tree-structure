@@ -111,36 +111,38 @@ export class Node<T> {
 
   first(fn?: NodeVisitorFunction<T>, options?: Options): Node<T> | undefined;
   first(options?: Options): Node<T> | undefined;
-  first(...argList: ParseArgs<T>): Node<T> | undefined {
+  first(...args: ParseArgs<T>): Node<T> | undefined {
     let first;
 
-    const { fn, options } = this._parseArgs(...argList);
+    const { fn, options } = this._parseArgs(...args);
 
-    if (options.strategy === 'pre') {
-      this.walkStrategy.pre(this, (node: Node<T>) => {
-        if (fn(node)) {
-          first = node;
-          return false;
-        }
-      });
-    } else if (options.strategy === 'post') {
-      this.walkStrategy.post(this, (node: Node<T>) => {
-        if (fn(node)) {
-          first = node;
-          return false;
-        }
-      });
+    switch(options.strategy) {
+      case 'pre':
+        this.walkStrategy.pre(this, callback);
+        break;
+      case 'post':
+        this.walkStrategy.post(this, callback);
+        break;
+      case 'breadth':
+        this.walkStrategy.breadth(this, callback);
     }
 
     return first;
+
+    function callback(node: Node<T>) {
+      if (fn(node)) {
+        first = node;
+        return false;
+      }
+    }
   }
 
   all(fn?: NodeVisitorFunction<T>, options?: Options): Node<T>[];
   all(options?: Options): Node<T>[];
-  all(...argList: ParseArgs<T>): Node<T>[] {
+  all(...args: ParseArgs<T>): Node<T>[] {
     const all: Node<T>[] = [];
 
-    const { fn, options } = this._parseArgs(...argList);
+    const { fn, options } = this._parseArgs(...args);
 
     switch(options.strategy) {
       case 'pre':
