@@ -384,6 +384,30 @@ describe('TreeData', () => {
         expect(idGt10AndChildOfRoot[0].model.id).toEqual(11);
         expect(idGt10AndChildOfRoot[1].model.id).toEqual(12);
       });
+
+      it('should get an array including all nodes with a different strategy', () => {
+        const nodes = root.all({ strategy: 'post' });
+
+        expect(nodes.length).toEqual(6);
+        expect(nodes[0].model.id).toEqual(111);
+        expect(nodes[1].model.id).toEqual(11);
+        expect(nodes[2].model.id).toEqual(121);
+        expect(nodes[3].model.id).toEqual(122);
+        expect(nodes[4].model.id).toEqual(12);
+        expect(nodes[5].model.id).toEqual(1);
+      });
+
+      it('should get an array including all nodes with a different strategy (2)', () => {
+        const nodes = root.all({ strategy: 'breadth' });
+
+        expect(nodes.length).toEqual(6);
+        expect(nodes[0].model.id).toEqual(1);
+        expect(nodes[1].model.id).toEqual(11);
+        expect(nodes[2].model.id).toEqual(12);
+        expect(nodes[3].model.id).toEqual(111);
+        expect(nodes[4].model.id).toEqual(121);
+        expect(nodes[5].model.id).toEqual(122);
+      });
     });
 
     describe('first()', () => {

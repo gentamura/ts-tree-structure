@@ -135,25 +135,31 @@ export class Node<T> {
     return first;
   }
 
-  all(fn?: NodeVisitorFunction<T>) {
+  all(fn?: NodeVisitorFunction<T>, options?: Options): Node<T>[];
+  all(options?: Options): Node<T>[];
+  all(...argList: ParseArgs<T>): Node<T>[] {
     const all: Node<T>[] = [];
 
-    const args = {
-      fn: fn ?? (bool => () => bool)(true),
-      options: {
-        strategy: 'pre',
-      },
-    };
+    const { fn, options } = this._parseArgs(...argList);
 
-    if (args.options.strategy === 'pre') {
-      this.walkStrategy.pre(this, (node: Node<T>) => {
-        if (args.fn(node)) {
-          all.push(node);
-        }
-      });
+    switch(options.strategy) {
+      case 'pre':
+        this.walkStrategy.pre(this, callback);
+        break;
+      case 'post':
+        this.walkStrategy.post(this, callback);
+        break;
+      case 'breadth':
+        this.walkStrategy.breadth(this, callback);
     }
 
     return all;
+
+    function callback(node: Node<T>) {
+      if (fn(node)) {
+        all.push(node);
+      }
+    }
   }
 
   drop() {
