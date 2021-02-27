@@ -459,5 +459,33 @@ describe('TreeData', () => {
         expect(root.first(idEq(111))).toBeUndefined();
       });
     });
+
+    describe('hasChildren()', () => {
+      let root: Node<NodeType>;
+
+      beforeEach(() => {
+        root = treeData.parse({
+          id: 1,
+          children: [
+            {
+              id: 11,
+              children: [{ id: 111 }]
+            },
+            {
+              id: 12,
+              children: [{ id: 121 }, { id: 122 }]
+            }
+          ]
+        });
+      });
+
+      it('should return true for node with children', () => {
+        expect(root.hasChildren()).toBe(true)
+      });
+
+      it('should return false for node without children', () => {
+        expect(root.first(idEq(111))?.hasChildren()).toBe(false);
+      });
+    });
   });
 });

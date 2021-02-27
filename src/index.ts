@@ -221,6 +221,10 @@ export class Node<T> {
     return this._addToPath([], this);
   }
 
+  hasChildren() {
+    return this.children.length > 0;
+  }
+
   walk(fn: Function, options: Options = { strategy: 'pre' }) {
     switch (options.strategy) {
       case 'pre':
