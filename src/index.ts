@@ -13,30 +13,19 @@ interface NodeVisitorFunction<T> {
   (visitingNode: Node<T>): boolean;
 }
 
-interface Config {
-  modelComparatorFn?: ComparatorFunction;
-  [propName: string]: any;
-}
-
 interface Args<T> {
   fn: NodeVisitorFunction<T>;
   options: Options;
 }
 
 class TreeData {
-  private config?: Config;
-
-  constructor(config?: Config) {
-    this.config = config;
-  }
-
   private _addChildToNode<T>(node: Node<T>, child: Node<T>) {
     child.parent = node;
     node.children.push(child);
   }
 
   parse<T>(model: Model<T>): Node<T> {
-    const node = new Node(this.config, model);
+    const node = new Node(model);
 
     if (model.children) {
       model.children.forEach((child: Model<T>) => {
@@ -49,14 +38,12 @@ class TreeData {
 }
 
 export class Node<T> {
-  config: Config;
   model: Model<T>;
   children: Node<T>[];
   parent?: Node<T>;
   walkStrategy: WalkStrategy<T>;
 
-  constructor(config: any, model: Model<T>) {
-    this.config = config;
+  constructor(model: Model<T>) {
     this.model = model;
     this.children = [];
     this.walkStrategy = new WalkStrategy();
