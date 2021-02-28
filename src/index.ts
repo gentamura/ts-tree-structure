@@ -1,24 +1,28 @@
-type ComparatorFunction = (left: any, right: any) => boolean;
-type NodeVisitorFunction<T> = (visitingNode: Node<T>) => boolean;
-
+type StrategyName = 'pre' | 'post' | 'breadth';
+type ParseArgs<T> = (NodeVisitorFunction<T> | Options | undefined)[];
 type Model<T> = T & { children?: Model<T>[] };
+
+interface Options {
+  strategy: StrategyName;
+}
+interface ComparatorFunction {
+  (left: any, right: any): boolean;
+}
+
+interface NodeVisitorFunction<T> {
+  (visitingNode: Node<T>): boolean;
+}
 
 interface Config {
   modelComparatorFn?: ComparatorFunction;
   [propName: string]: any;
 }
 
-type StrategyName = 'pre' | 'post' | 'breadth';
-
-interface Options {
-  strategy: StrategyName;
-}
-
-type ParseArgs<T> = (NodeVisitorFunction<T> | Options | undefined)[];
 interface Args<T> {
   fn: NodeVisitorFunction<T>;
   options: Options;
 }
+
 class TreeData {
   private config?: Config;
 
