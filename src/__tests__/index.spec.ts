@@ -135,9 +135,13 @@ describe('TreeData', () => {
     });
 
     it('should add child at index 0 of a leaf', () => {
-      const leaf = root.first(idEq(11))!;
-      leaf.addChildAtIndex(treeData.parse({ id: 111 }), 0);
-      expect(leaf.model.children).toEqual([{ id: 111 }]);
+      expect.assertions(1);
+
+      const leaf = root.first(idEq(11));
+      if (leaf) {
+        leaf.addChildAtIndex(treeData.parse({ id: 111 }), 0);
+        expect(leaf.model.children).toEqual([{ id: 111 }]);
+      }
     });
 
     it('should throw an error when adding child at negative index', () => {
@@ -240,17 +244,23 @@ describe('TreeData', () => {
     });
 
     it('should get an array of nodes from the root to the node (included)', () => {
-      const pathToNode121 = root.first(idEq(121))!.getPath();
+      expect.assertions(4);
 
-      expect(pathToNode121.length).toEqual(3);
-      expect(pathToNode121[0].model.id).toEqual(1);
-      expect(pathToNode121[1].model.id).toEqual(12);
-      expect(pathToNode121[2].model.id).toEqual(121);
+      const node = root.first(idEq(121));
+
+      if (node) {
+        const pathToNode121 = node.getPath();
+
+        expect(pathToNode121.length).toEqual(3);
+        expect(pathToNode121[0].model.id).toEqual(1);
+        expect(pathToNode121[1].model.id).toEqual(12);
+        expect(pathToNode121[2].model.id).toEqual(121);
+      }
     });
   });
 
   describe('traversal', () => {
-    let root: Node<NodeType>, mock121: Function, mock12: Function;
+    let root: Node<NodeType>, mock121: jest.Mock, mock12: jest.Mock;
 
     const callback121 = (node: Node<NodeType>) => {
       if (node.model.id === 121) {
