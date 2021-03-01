@@ -1,4 +1,5 @@
-import TreeData, { Node } from '../index';
+import type { Node } from '../index';
+import TreeData from '../index';
 
 type NodeType = { id: number };
 
