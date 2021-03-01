@@ -1,4 +1,4 @@
-type StrategyName = 'pre' | 'post' | 'breadth';
+export type StrategyName = 'pre' | 'post' | 'breadth';
 type ParseArgs<T> = (NodeVisitorFunction<T> | Options | undefined)[];
 type Model<T> = T & { children?: Model<T>[] };
 
