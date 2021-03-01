@@ -1,7 +1,8 @@
+import type { NodeVisitorFunction } from './types';
 import Node from './node';
 
 class WalkStrategy<T> {
-  pre(node: Node<T>, callback: Function) {
+  pre(node: Node<T>, callback: NodeVisitorFunction<T>): boolean {
     const len = node.children.length;
     let keepGoing = callback(node);
 
@@ -16,7 +17,7 @@ class WalkStrategy<T> {
     return keepGoing;
   }
 
-  post(node: Node<T>, callback: Function) {
+  post(node: Node<T>, callback: NodeVisitorFunction<T>): boolean {
     const len = node.children.length;
     let keepGoing;
 
@@ -33,7 +34,7 @@ class WalkStrategy<T> {
     return keepGoing;
   }
 
-  breadth(node: Node<T>, callback: Function) {
+  breadth(node: Node<T>, callback: NodeVisitorFunction<T>): void {
     const queue = [node];
 
     (function processQueue() {
@@ -41,15 +42,17 @@ class WalkStrategy<T> {
         return;
       }
 
-      const node = queue.shift()!;
-      const len = node.children.length;
+      const node = queue.shift();
+      if (node) {
+        const len = node.children.length;
 
-      for (let i = 0; i < len; i++) {
-        queue.push(node.children[i]);
-      }
+        for (let i = 0; i < len; i++) {
+          queue.push(node.children[i]);
+        }
 
-      if (callback(node) !== false) {
-        processQueue();
+        if (callback(node) !== false) {
+          processQueue();
+        }
       }
     })();
   }

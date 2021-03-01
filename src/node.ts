@@ -34,11 +34,11 @@ class Node<T> {
     return child;
   }
 
-  addChild(child: Node<T>) {
+  addChild(child: Node<T>): Node<T> {
     return this._addChild(this, child);
   }
 
-  addChildAtIndex(child: Node<T>, index: number) {
+  addChildAtIndex(child: Node<T>, index: number): Node<T> {
     return this._addChild(this, child, index);
   }
 
@@ -80,15 +80,18 @@ class Node<T> {
         break;
       case 'breadth':
         this.walkStrategy.breadth(this, callback);
+        break;
     }
 
     return first;
 
-    function callback(node: Node<T>) {
+    function callback(node: Node<T>): boolean {
       if (fn(node)) {
         first = node;
         return false;
       }
+
+      return true;
     }
   }
 
@@ -108,18 +111,21 @@ class Node<T> {
         break;
       case 'breadth':
         this.walkStrategy.breadth(this, callback);
+        break;
     }
 
     return all;
 
-    function callback(node: Node<T>) {
+    function callback(node: Node<T>): boolean {
       if (fn(node)) {
         all.push(node);
       }
+
+      return true;
     }
   }
 
-  drop() {
+  drop(): Node<T> {
     if (!this.isRoot() && this.parent) {
       const indexOfChild = this.parent.children.indexOf(this);
       this.parent.children.splice(indexOfChild, 1); // Remove Node from data
@@ -131,11 +137,11 @@ class Node<T> {
     return this;
   }
 
-  isRoot() {
+  isRoot(): boolean {
     return this.parent === undefined;
   }
 
-  setIndex(index: number) {
+  setIndex(index: number): Node<T> {
     if (this.parent === undefined) {
       if (index === 0) {
         return this;
@@ -154,41 +160,44 @@ class Node<T> {
     // Insert the node in children by new index.
     this.parent.children.splice(index, 0, node);
 
-    // Get target model in children by current index.
-    const model = this.parent.model.children!.splice(currentIndex, 1)[0];
-    // Insert the model in children by new index.
-    this.parent.model.children!.splice(index, 0, model);
+    const { children } = this.parent.model;
+    if (children) {
+      // Get target model in children by current index.
+      const model = children.splice(currentIndex, 1)[0];
+      // Insert the model in children by new index.
+      children.splice(index, 0, model);
+    }
 
     return this;
   }
 
-  getIndex() {
+  getIndex(): number {
     if (this.parent === undefined) {
       return 0;
     }
 
     return this.parent.children.indexOf(this);
-  };
+  }
 
   private _addToPath(path: Node<T>[], node: Node<T>) {
     path.unshift(node);
 
-    if (!node.isRoot()) {
-      this._addToPath(path, node.parent!);
+    if (!node.isRoot() && node.parent) {
+      this._addToPath(path, node.parent);
     }
 
     return path;
   }
 
-  getPath() {
+  getPath(): Node<T>[] {
     return this._addToPath([], this);
   }
 
-  hasChildren() {
+  hasChildren(): boolean {
     return this.children.length > 0;
   }
 
-  walk(fn: Function, options: Options = { strategy: 'pre' }) {
+  walk(fn: NodeVisitorFunction<T>, options: Options = { strategy: 'pre' }): void {
     switch (options.strategy) {
       case 'pre':
         this.walkStrategy.pre(this, fn);
