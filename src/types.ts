@@ -18,4 +18,3 @@ export interface ParsedArgs<T> {
   fn: NodeVisitorFunction<T>;
   options: Options;
 }
-

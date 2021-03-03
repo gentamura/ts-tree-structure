@@ -1,4 +1,10 @@
-import type { Model, ParseArgs, ParsedArgs, Options, NodeVisitorFunction } from './types';
+import type {
+  Model,
+  ParseArgs,
+  ParsedArgs,
+  Options,
+  NodeVisitorFunction,
+} from './types';
 import WalkStrategy from './walk-strategy';
 
 class Node<T> {
@@ -48,15 +54,11 @@ class Node<T> {
     if (typeof args[0] === 'function') {
       parsedArgs = {
         fn: args[0],
-        options: (typeof args[1] === 'object')
-          ? args[1]
-          : { strategy: 'pre' },
+        options: typeof args[1] === 'object' ? args[1] : { strategy: 'pre' },
       };
     } else {
       parsedArgs = {
-        fn: (typeof args[1] === 'function')
-          ? args[1]
-          : (() => true),
+        fn: typeof args[1] === 'function' ? args[1] : () => true,
         options: args[0] ?? { strategy: 'pre' },
       };
     }
@@ -71,7 +73,7 @@ class Node<T> {
 
     const { fn, options } = this._parseArgs(...args);
 
-    switch(options.strategy) {
+    switch (options.strategy) {
       case 'pre':
         this.walkStrategy.pre(this, callback);
         break;
@@ -102,7 +104,7 @@ class Node<T> {
 
     const { fn, options } = this._parseArgs(...args);
 
-    switch(options.strategy) {
+    switch (options.strategy) {
       case 'pre':
         this.walkStrategy.pre(this, callback);
         break;
@@ -197,7 +199,10 @@ class Node<T> {
     return this.children.length > 0;
   }
 
-  walk(fn: NodeVisitorFunction<T>, options: Options = { strategy: 'pre' }): void {
+  walk(
+    fn: NodeVisitorFunction<T>,
+    options: Options = { strategy: 'pre' }
+  ): void {
     switch (options.strategy) {
       case 'pre':
         this.walkStrategy.pre(this, fn);

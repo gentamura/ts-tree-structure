@@ -30,9 +30,7 @@ describe('TreeData', () => {
         children: [
           {
             id: 11,
-            children: [
-              { id: 111 },
-            ],
+            children: [{ id: 111 }],
           },
           {
             id: 12,
@@ -48,9 +46,9 @@ describe('TreeData', () => {
               { id: 129 },
               { id: 1210 },
               { id: 1211 },
-            ]
-          }
-        ]
+            ],
+          },
+        ],
       });
 
       expect(root.parent).toBeUndefined();
@@ -61,9 +59,7 @@ describe('TreeData', () => {
         children: [
           {
             id: 11,
-            children: [
-              { id: 111 },
-            ],
+            children: [{ id: 111 }],
           },
           {
             id: 12,
@@ -79,9 +75,9 @@ describe('TreeData', () => {
               { id: 129 },
               { id: 1210 },
               { id: 1211 },
-            ]
-          }
-        ]
+            ],
+          },
+        ],
       });
       expect(root).toEqual(root.children[0].parent);
       expect(root).toEqual(root.children[1].parent);
@@ -102,8 +98,8 @@ describe('TreeData', () => {
           { id: 128 },
           { id: 129 },
           { id: 1210 },
-          {id: 1211 },
-        ]
+          { id: 1211 },
+        ],
       });
       expect(node12).toEqual(node12.children[0].parent);
       expect(node12).toEqual(node12.children[1].parent);
@@ -120,7 +116,12 @@ describe('TreeData', () => {
     it('should add child to the end', () => {
       root.addChild(treeData.parse({ id: 13 }));
       root.addChild(treeData.parse({ id: 10 }));
-      expect(root.model.children).toEqual([{ id: 11 }, { id: 12 }, { id: 13 }, { id: 10 }]);
+      expect(root.model.children).toEqual([
+        { id: 11 },
+        { id: 12 },
+        { id: 13 },
+        { id: 10 },
+      ]);
     });
 
     it('should add child at index', () => {
@@ -146,12 +147,16 @@ describe('TreeData', () => {
 
     it('should throw an error when adding child at negative index', () => {
       const child = treeData.parse({ id: 13 });
-      expect(() => root.addChildAtIndex(child, -1)).toThrow(new Error('Invalid index.'));
+      expect(() => root.addChildAtIndex(child, -1)).toThrow(
+        new Error('Invalid index.')
+      );
     });
 
     it('should throw an error when adding child at a too high index', () => {
       const child = treeData.parse({ id: 13 });
-      expect(() => root.addChildAtIndex(child, 3)).toThrow(new Error('Invalid index.'));
+      expect(() => root.addChildAtIndex(child, 3)).toThrow(
+        new Error('Invalid index.')
+      );
     });
   });
 
@@ -159,7 +164,10 @@ describe('TreeData', () => {
     let root: Node<NodeType>;
 
     beforeEach(() => {
-      root = treeData.parse({ id: 1, children: [{ id: 11 }, { id: 12 }, { id: 13 }] });
+      root = treeData.parse({
+        id: 1,
+        children: [{ id: 11 }, { id: 12 }, { id: 13 }],
+      });
     });
 
     it('should set the index of the node among its siblings', () => {
@@ -189,7 +197,10 @@ describe('TreeData', () => {
         for (k = 0; k < root.children.length; k++) {
           for (l = 0; l < root.children.length; l++) {
             if (root.children[k] !== child && root.children[l] !== child) {
-              expect(k < l).toEqual(oldOrder.indexOf(root.children[k]) < oldOrder.indexOf(root.children[l]));
+              expect(k < l).toEqual(
+                oldOrder.indexOf(root.children[k]) <
+                  oldOrder.indexOf(root.children[l])
+              );
             }
           }
         }
@@ -210,11 +221,15 @@ describe('TreeData', () => {
     });
 
     it('should throw an error when setting to a negative index', () => {
-      expect(() => root.children[0].setIndex(-1)).toThrow(new Error('Invalid index.'));
+      expect(() => root.children[0].setIndex(-1)).toThrow(
+        new Error('Invalid index.')
+      );
     });
 
     it('should throw an error when setting to a too high index', () => {
-      expect(() => root.children[0].setIndex(root.children.length)).toThrow(new Error('Invalid index.'));
+      expect(() => root.children[0].setIndex(root.children.length)).toThrow(
+        new Error('Invalid index.')
+      );
     });
   });
 
@@ -227,13 +242,13 @@ describe('TreeData', () => {
         children: [
           {
             id: 11,
-            children: [{ id: 111 }]
+            children: [{ id: 111 }],
           },
           {
             id: 12,
-            children: [{ id: 121 }, { id: 122 }]
-          }
-        ]
+            children: [{ id: 121 }, { id: 122 }],
+          },
+        ],
       });
     });
 
@@ -280,13 +295,13 @@ describe('TreeData', () => {
         children: [
           {
             id: 11,
-            children: [{ id: 111 }]
+            children: [{ id: 111 }],
           },
           {
             id: 12,
-            children: [{ id: 121 }, { id: 122 }]
-          }
-        ]
+            children: [{ id: 121 }, { id: 122 }],
+          },
+        ],
       });
 
       mock121 = jest.fn(callback121);
@@ -349,18 +364,18 @@ describe('TreeData', () => {
         children: [
           {
             id: 11,
-            children: [{ id: 111 }]
+            children: [{ id: 111 }],
           },
           {
             id: 12,
-            children: [{ id: 121 }, { id: 122 }]
-          }
-        ]
+            children: [{ id: 121 }, { id: 122 }],
+          },
+        ],
       });
     });
 
     it('should get an empty array if no nodes match the predicate', () => {
-      const idLt0 = root.all(node => node.model.id < 0);
+      const idLt0 = root.all((node) => node.model.id < 0);
 
       expect(idLt0.length).toEqual(0);
     });
@@ -379,7 +394,7 @@ describe('TreeData', () => {
     });
 
     it('should get an array with all nodes that match a given predicate', () => {
-      const idGt100 = root.all(node => node.model.id > 100);
+      const idGt100 = root.all((node) => node.model.id > 100);
 
       expect(idGt100.length).toEqual(3);
       expect(idGt100[0].model.id).toEqual(111);
@@ -388,7 +403,9 @@ describe('TreeData', () => {
     });
 
     it('should get an array with all nodes that match a given predicate (2)', () => {
-      const idGt10AndChildOfRoot = root.all(node => node.model.id > 10 && node.parent === root);
+      const idGt10AndChildOfRoot = root.all(
+        (node) => node.model.id > 10 && node.parent === root
+      );
 
       expect(idGt10AndChildOfRoot.length).toEqual(2);
       expect(idGt10AndChildOfRoot[0].model.id).toEqual(11);
@@ -429,13 +446,13 @@ describe('TreeData', () => {
         children: [
           {
             id: 11,
-            children: [{ id: 111 }]
+            children: [{ id: 111 }],
           },
           {
             id: 12,
-            children: [{id: 121}, {id: 122}]
-          }
-        ]
+            children: [{ id: 121 }, { id: 122 }],
+          },
+        ],
       });
     });
 
@@ -479,13 +496,13 @@ describe('TreeData', () => {
         children: [
           {
             id: 11,
-            children: [{ id: 111 }]
+            children: [{ id: 111 }],
           },
           {
             id: 12,
-            children: [{ id: 121 }, { id: 122 }]
-          }
-        ]
+            children: [{ id: 121 }, { id: 122 }],
+          },
+        ],
       });
     });
 
@@ -494,7 +511,10 @@ describe('TreeData', () => {
     });
 
     it('should give back the dropped node, which no longer be found in the original root', () => {
-      expect(root.first(idEq(11))?.drop().model).toEqual({ id: 11, children: [{ id: 111 }]});
+      expect(root.first(idEq(11))?.drop().model).toEqual({
+        id: 11,
+        children: [{ id: 111 }],
+      });
       expect(root.first(idEq(11))).toBeUndefined();
       expect(root.first(idEq(111))).toBeUndefined();
     });
@@ -509,18 +529,18 @@ describe('TreeData', () => {
         children: [
           {
             id: 11,
-            children: [{ id: 111 }]
+            children: [{ id: 111 }],
           },
           {
             id: 12,
-            children: [{ id: 121 }, { id: 122 }]
-          }
-        ]
+            children: [{ id: 121 }, { id: 122 }],
+          },
+        ],
       });
     });
 
     it('should return true for node with children', () => {
-      expect(root.hasChildren()).toBe(true)
+      expect(root.hasChildren()).toBe(true);
     });
 
     it('should return false for node without children', () => {
