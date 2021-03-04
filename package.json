@@ -6,7 +6,7 @@
   "unpkg": "umd/tree-data.min.js",
   "browser": "umd/tree-data.min.js",
   "module": "esm/index.js",
-  "types": "lib/index.d.ts",
+  "types": "esm/index.d.ts",
   "files": [
     "lib",
     "esm",
