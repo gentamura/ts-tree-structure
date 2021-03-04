@@ -1,5 +1,5 @@
-import type { Node } from '../index';
-import TreeData from '../index';
+import type { Node } from '../src/index';
+import TreeData from '../src/index';
 
 type NodeType = { id: number };
 
