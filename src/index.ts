@@ -1,4 +1,4 @@
-import TreeData from './tree-data';
+import Tree from './tree';
 import Node from './node';
 
 export {
@@ -9,4 +9,4 @@ export {
   NodeVisitorFunction,
 } from './types';
 export type { Node };
-export default TreeData;
+export default Tree;

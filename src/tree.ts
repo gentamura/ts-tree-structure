@@ -1,7 +1,7 @@
 import type { Model } from './types';
 import Node from './node';
 
-class TreeData {
+class Tree {
   private _addChildToNode<T>(node: Node<T>, child: Node<T>) {
     child.parent = node;
     node.children.push(child);
@@ -20,4 +20,4 @@ class TreeData {
   }
 }
 
-export default TreeData;
+export default Tree;

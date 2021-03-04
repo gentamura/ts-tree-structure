@@ -1,36 +1,36 @@
-# TreeData
+# ts-tree-structure
 
 Manipulate and traverse tree-like structures in TypeScript.
 
-![Build Status](https://github.com/gentamura/tree-data/workflows/build-test/badge.svg)
+![Build Status](https://github.com/gentamura/ts-tree-structure/workflows/build-test/badge.svg)
 
 ## Installation
 
 ### Node
 
-TreeData is available as an npm module so you can install it with `npm install tree-data` and use it in your script:
+Tree is available as an npm module so you can install it with `npm install ts-tree-structure` and use it in your script:
 
 #### ES Module
 ```ts
-import TreeData from 'tree-data';
+import Tree from 'ts-tree-structure';
 
-const tree = new TreeData();
+const tree = new Tree();
 const root = tree.parse({ id: 1, name: 'foo', children: [{ id: 11, name: 'bar' }]});
 ```
 
 #### Common.js
 ```js
-const TreeData = require('tree-data');
+const Tree = require('ts-tree-structure');
 
-const tree = new TreeData();
+const tree = new Tree();
 const root = tree.parse({ id: 1, name: 'foo', children: [{ id: 11, name: 'bar' }]});
 ```
 
 #### UMD
 ```html
-<script src="https://unpkg.com/tree-data/"></script>
+<script src="https://unpkg.com/ts-tree-structure/"></script>
 <script>
-  var tree = new TreeData();
+  var tree = new Tree();
   var root = tree.parse({ id: 1, name: 'foo', children: [{ id: 11, name: 'bar' }]});
 </script>
 ```
@@ -42,12 +42,12 @@ You can maually find the definition files in the `src` folder.
 
 ## API Reference
 
-### Create a new TreeData
+### Create a new Tree
 
-Create a new TreeData with the given options.
+Create a new Tree with the given options.
 
 ```js
-const tree = new TreeData()
+const tree = new Tree()
 ```
 
 ### Parse the hierarchy object

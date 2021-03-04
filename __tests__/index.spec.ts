@@ -1,22 +1,22 @@
 import type { Node } from '../src/index';
-import TreeData from '../src/index';
+import Tree from '../src/index';
 
 type NodeType = { id: number };
 
-describe('TreeData', () => {
+describe('Tree', () => {
   const idEq = (id: number) => (node: Node<NodeType>) => {
     return node.model.id === id;
   };
 
-  let treeData: TreeData;
+  let tree: Tree;
 
   beforeEach(() => {
-    treeData = new TreeData();
+    tree = new Tree();
   });
 
   describe('parse()', () => {
     it('should create a root node when given a model without children', () => {
-      const root = treeData.parse({ id: 1 });
+      const root = tree.parse({ id: 1 });
 
       expect(root.parent).toBeUndefined();
       expect(Array.isArray(root.children)).toBe(true);
@@ -25,7 +25,7 @@ describe('TreeData', () => {
     });
 
     it('should create a root and the respective children when given a model with children', () => {
-      const root = treeData.parse({
+      const root = tree.parse({
         id: 1,
         children: [
           {
@@ -110,12 +110,12 @@ describe('TreeData', () => {
     let root: Node<NodeType>;
 
     beforeEach(() => {
-      root = treeData.parse({ id: 1, children: [{ id: 11 }, { id: 12 }] });
+      root = tree.parse({ id: 1, children: [{ id: 11 }, { id: 12 }] });
     });
 
     it('should add child to the end', () => {
-      root.addChild(treeData.parse({ id: 13 }));
-      root.addChild(treeData.parse({ id: 10 }));
+      root.addChild(tree.parse({ id: 13 }));
+      root.addChild(tree.parse({ id: 10 }));
       expect(root.model.children).toEqual([
         { id: 11 },
         { id: 12 },
@@ -125,13 +125,13 @@ describe('TreeData', () => {
     });
 
     it('should add child at index', () => {
-      root.addChildAtIndex(treeData.parse({ id: 13 }), 1);
+      root.addChildAtIndex(tree.parse({ id: 13 }), 1);
       expect(root.model.children).toEqual([{ id: 11 }, { id: 13 }, { id: 12 }]);
       expect(root.children[1].model.id).toEqual(13);
     });
 
     it('should add child at the end when index matches the children number', () => {
-      root.addChildAtIndex(treeData.parse({ id: 13 }), 2);
+      root.addChildAtIndex(tree.parse({ id: 13 }), 2);
       expect(root.model.children).toEqual([{ id: 11 }, { id: 12 }, { id: 13 }]);
     });
 
@@ -140,20 +140,20 @@ describe('TreeData', () => {
 
       const leaf = root.first(idEq(11));
       if (leaf) {
-        leaf.addChildAtIndex(treeData.parse({ id: 111 }), 0);
+        leaf.addChildAtIndex(tree.parse({ id: 111 }), 0);
         expect(leaf.model.children).toEqual([{ id: 111 }]);
       }
     });
 
     it('should throw an error when adding child at negative index', () => {
-      const child = treeData.parse({ id: 13 });
+      const child = tree.parse({ id: 13 });
       expect(() => root.addChildAtIndex(child, -1)).toThrow(
         new Error('Invalid index.')
       );
     });
 
     it('should throw an error when adding child at a too high index', () => {
-      const child = treeData.parse({ id: 13 });
+      const child = tree.parse({ id: 13 });
       expect(() => root.addChildAtIndex(child, 3)).toThrow(
         new Error('Invalid index.')
       );
@@ -164,7 +164,7 @@ describe('TreeData', () => {
     let root: Node<NodeType>;
 
     beforeEach(() => {
-      root = treeData.parse({
+      root = tree.parse({
         id: 1,
         children: [{ id: 11 }, { id: 12 }, { id: 13 }],
       });
@@ -237,7 +237,7 @@ describe('TreeData', () => {
     let root: Node<NodeType>;
 
     beforeEach(() => {
-      root = treeData.parse({
+      root = tree.parse({
         id: 1,
         children: [
           {
@@ -290,7 +290,7 @@ describe('TreeData', () => {
     };
 
     beforeEach(() => {
-      root = treeData.parse({
+      root = tree.parse({
         id: 1,
         children: [
           {
@@ -359,7 +359,7 @@ describe('TreeData', () => {
     let root: Node<NodeType>;
 
     beforeEach(() => {
-      root = treeData.parse({
+      root = tree.parse({
         id: 1,
         children: [
           {
@@ -441,7 +441,7 @@ describe('TreeData', () => {
     let root: Node<NodeType>;
 
     beforeEach(() => {
-      root = treeData.parse({
+      root = tree.parse({
         id: 1,
         children: [
           {
@@ -491,7 +491,7 @@ describe('TreeData', () => {
     let root: Node<NodeType>;
 
     beforeEach(function () {
-      root = treeData.parse({
+      root = tree.parse({
         id: 1,
         children: [
           {
@@ -524,7 +524,7 @@ describe('TreeData', () => {
     let root: Node<NodeType>;
 
     beforeEach(() => {
-      root = treeData.parse({
+      root = tree.parse({
         id: 1,
         children: [
           {
