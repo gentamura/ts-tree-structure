@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "lib/index.js",
+  "unpkg": "umd/tree-data.min.js",
   "browser": "umd/tree-data.min.js",
   "module": "esm/index.js",
   "types": "lib/index.d.ts",
