@@ -5,7 +5,7 @@ module.exports = ['production', 'development'].map((mode) => ({
   entry: './src/index.ts',
   output: {
     path: path.resolve(__dirname, 'umd'),
-    filename: `tree-data.${mode}.js`,
+    filename: `tree-data${mode === 'production' ? '.min' : ''}.js`,
     library: 'TreeData',
     libraryTarget: 'umd',
   },
