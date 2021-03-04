@@ -1,6 +1,7 @@
 # ts-tree-structure
 
 Manipulate and traverse tree-like structures in TypeScript.
+
 Inspiration from [tree-model.js](https://github.com/joaonuno/tree-model-js).
 
 ![Build Status](https://github.com/gentamura/ts-tree-structure/workflows/build-test/badge.svg)
