@@ -22,7 +22,7 @@ const root = tree.parse({ id: 1, name: 'foo', children: [{ id: 11, name: 'bar' }
 
 #### Common.js
 ```js
-const Tree = require('ts-tree-structure');
+const Tree = require('ts-tree-structure').default;
 
 const tree = new Tree();
 const root = tree.parse({ id: 1, name: 'foo', children: [{ id: 11, name: 'bar' }]});
@@ -30,8 +30,9 @@ const root = tree.parse({ id: 1, name: 'foo', children: [{ id: 11, name: 'bar' }
 
 #### UMD
 ```html
-<script src="https://unpkg.com/ts-tree-structure/"></script>
+<script src="https://unpkg.com/ts-tree-structure/umd/ts-tree-structure.min.js"></script>
 <script>
+  var Tree = Tree.default;
   var tree = new Tree();
   var root = tree.parse({ id: 1, name: 'foo', children: [{ id: 11, name: 'bar' }]});
 </script>
